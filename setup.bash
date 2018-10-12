@@ -5,6 +5,10 @@ echo "Welcome to mrblister's VPS masternode setup"
 echo "This script will now install your masternode."
 sleep 3
 
+#Update the VPS server
+sudo apt update
+sudo apt dist-upgrade
+
 #Turn swap on, not needed but maybe will be useful in future.
 sudo dd if=/dev/zero of=/var/swap.img bs=1024k count=1000
 sudo mkswap /var/swap.img
@@ -18,7 +22,7 @@ cd Downloads
 tar xvzf ~/Downloads/odin-1.4.2-x86_64-linux-gnu.tar.gz 
 cp odin-1.4.2/bin/odin* /usr/bin/. && cd
 
-#Set up initial odin.conf file.  The ipaddress part might not work if multiple adapters 
+#Set up initial odin.conf file.  The auto ipaddress might not work if multiple adapters, so I prompt for IP instead.
 #present (like for ipv6 and ipv4).
 mkdir ~/.odin
 config=~/.odin/odin.conf 
