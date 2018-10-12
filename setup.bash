@@ -53,5 +53,5 @@ echo "The masternode ip address you entered was:"
 echo "$ipaddress"
 echo "Your masternode private key is:"
 echo "$mnkey"
-echo "
+echo " "
  
