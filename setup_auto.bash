@@ -36,12 +36,15 @@ echo "masternodeprivkey=$mnkey" >> $config
 odin-cli stop
 odind
 
+
 echo " "
 echo "Masternode VPS setup complete."
 echo "(it will now take a few minutes for the mn to get ready)"
 echo " "
 echo "You can now complete the setup using the Odin gui wallet."
 echo " "
+echo "The masternode ip address detected was:"
+echo "$ipaddress"
 echo "Your masternode private key is:"
 echo "$mnkey"
 echo " "
