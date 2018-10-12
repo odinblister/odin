@@ -1,5 +1,9 @@
 #!/bin/bash
 
+#Welcome message
+echo "Welcome to mrblister's VPS masternode setup"  
+sleep 5
+
 #Turn swap on, not needed but maybe will be useful in future.
 sudo dd if=/dev/zero of=/var/swap.img bs=1024k count=1000
 sudo mkswap /var/swap.img
