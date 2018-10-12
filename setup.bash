@@ -7,7 +7,7 @@ sleep 3
 
 #Update the VPS server
 sudo apt update
-sudo apt dist-upgrade
+sudo apt dist-upgrade -y
 
 #Turn swap on, not needed but maybe will be useful in future.
 sudo dd if=/dev/zero of=/var/swap.img bs=1024k count=1000
