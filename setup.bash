@@ -47,3 +47,4 @@ echo " "
 echo "Your masternode private key is:"
 echo "$mnkey"
 echo " "
+ 
