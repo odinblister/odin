@@ -2,7 +2,8 @@
 
 #Welcome message
 echo "Welcome to mrblister's VPS masternode setup"  
-sleep 5
+echo "This script will now install your masternode."
+sleep 3
 
 #Turn swap on, not needed but maybe will be useful in future.
 sudo dd if=/dev/zero of=/var/swap.img bs=1024k count=1000
