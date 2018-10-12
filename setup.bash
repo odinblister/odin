@@ -5,9 +5,9 @@ echo "Welcome to mrblister's VPS masternode setup"
 echo "This script will now install your masternode."
 sleep 3
 
-#Update the VPS server
-sudo apt update
-sudo apt dist-upgrade -y
+#Update the VPS server.  Uncomment if you want to update the server.
+#sudo apt update
+#sudo apt dist-upgrade -y
 
 #Turn swap on, not needed but maybe will be useful in future.
 sudo dd if=/dev/zero of=/var/swap.img bs=1024k count=1000
