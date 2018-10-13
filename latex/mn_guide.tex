@@ -1,0 +1,153 @@
+% I use the revtex4-1 document class (used for american physical society journals) because I like the style
+% review of modern physics style.
+\documentclass[rmp,12pt,notitlepage]{revtex4-1}
+\usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage{siunitx}
+\usepackage{graphicx}
+\setlength\parindent{0pt}
+
+% The only thing I don't like about it is that it uses letters for section numbering.  This changes it 
+% to numbes
+\renewcommand\thesection{\arabic{section}}
+\renewcommand\thesubsection{\thesection.\arabic{subsection}}
+\renewcommand\thesubsubsection{\thesubsection.\arabic{subsubsection}}
+
+\begin{document}
+\title{Yet Another Odin Masternode Guide}
+\author{by: mrblister}
+\maketitle
+
+This guide will get your masternode (MN) up and running in no time.  It assumes you have already have an Ubuntu VPS up and  running, that you can log into it via a ssh key.  There are multiple guides and youtube videos on how to do this.  
+
+\section{Hot Wallet Setup}
+The ``hot wallet'' is the MN wallet running on your remote VPS.  It never actually holds any ODIN, but it is the wallet that is always connected 24/7 to the internet and actually processes MN transactions. There are many ways to set up the hot wallet (for example, compiling from source or using docker).  I'll use the simplest method (at least in my mind) which is just to copy over the binary files directly from the official Odin github repository.  
+
+In general terms, what you will do is connect to the VPS and then use a script that I wrote to do all the setup for you.
+
+\subsection{Log Into VPS} \label{login}
+Most likely your VPS was created with only the administrative account 'root'.  To log into the VPS you need to do so as root.  From your local terminal (command line), use the following command with the ip address of your VPN (press enter after to execute it):
+\begin{verbatim}
+   ssh root@vpn.ip.address 
+\end{verbatim}
+The first time you log in, it will ask you if you want to store that address as a trusted one.  Type ``yes''.  You might also be asked to enter your ssh passphrase, depending on whether or not you configured your ssh key with one.  If so, type your passphrase and press enter. 
+
+\subsection{Odin Headless Installation and MN Configuration}
+Here, you will download a script and run it.  This script will:
+\begin{itemize}[noitemsep]
+   \item Create a swap file (this helps low ram VPSs).
+   \item Downloads the odin binary files (executable files, like *.exe in Windows) and puts them in the right place.
+   \item Generate a masternode private key.
+   \item Set up the odin configuration file for MN operation.
+   \item Start the masternode for you.
+\end{itemize}
+Start by downloading the script.  From the VPS terminal (you should be logged into the VPS), execute the following two lines:
+\begin{verbatim}
+wget https://raw.githubusercontent.com/odinblister/odin/master/setup.bash
+bash setup.bash
+\end{verbatim}
+When prompted, enter the IP address (double check to not make any mistakes).  The script will finish and give you a masternode private key (starts with a number ``5''), as well as repeat the IP address you entered.  Copy these two things down somewhere because you will need them for the next part.  That's it!  It will take a few minutes for the MN to initialize, but you don't have to wait. 
+
+\subsubsection*{Notes}
+\begin{itemize}
+\item The masternode private key is NOT the same thing as a regular crypto key.  You can't use this key to access or transfer any coins.  It is just a label that will be used to pair the hot and cold wallets to each other.  Never send any coins to this key.   
+\item You can check your MN status with the command 
+\begin{verbatim}
+   odin-cli masternode status
+\end{verbatim}
+Initially this command's output will say that the MN isn't ready.  Eventually (5 minutes or so), if you try again, it will return the following:
+\begin{verbatim}
+   error: {"code":-1,"message":"Masternode not found in the list of available 
+   masternodes. Current status: Not capable masternode: Hot node, waiting for 
+   remote activation."}
+\end{verbatim}
+This means your MN is set up and ready to go.  Regardless, you don't need to wait. You can proceed directly to the next step.
+\end{itemize}
+
+\newpage
+\section{Cold Wallet Setup}   
+This part is done from your local machine, using the ODIN Core graphical user interface (gui) wallet. You will need to enter a few commands into the debug console.  After starting the ODIN Core wallet, you can get to the debug console from the menu (``tools'' $\rightarrow$ ``Debug Console'').
+\subsection{Generate an ODIN Address to Send Coins To}
+To lock the coins for MN staking, you will need to send exactly \num{25000} coins to yourself.  To do so, you need a new address to send to.  This address will still be controlled by your local wallet, but the trick is then to mark the transaction with the MN private key.  When this is done, the wallet will know these coins are reserved for your MN.
+\begin{verbatim}
+   getaccountaddress mn01
+\end{verbatim}
+This should give you an ODIN address.  Make sure it starts with a small letter ``o''.  You can choose any label you want for that address instead of mn01.  
+
+\subsection{Send Yourself \num{25000} Coins and Get Transaction Details}
+Click the ``leaving bird'' icon and fill in the ``Pay To'' field with the ODIN address you just created.  The ``Label'' field should automatically populate with the label you chose in the previous step (if not, you entered the address wrong).
+\begin{center}
+\includegraphics[width=0.8\textwidth]{send}
+\end{center}
+Once you have sent the coins, check the transaction history by clicking the top ``Chest'' icon.  You will see your transaction at the top of the list.  Notice that the ``amount listed'' is a very small deduction.  Since you are sending the coins to an address generated by your wallet, the net result of sending the coins is just that you paid the transaction fee. 
+\begin{center}
+   \includegraphics[width=0.9\textwidth]{history}
+\end{center}
+At first the transaction will be unconfirmed, and you need to wait a couple of minutes until there is at least one confirmation.  When you have one, double click the transaction to see the details.  
+\begin{center}
+   \includegraphics[width=0.5\textwidth]{details}
+\end{center}
+Record the transaction ID in the same place you put the masternode key and IP address from step 1.2.  You are almost done!  The last thing you need is the ``outputidx'' of this transaction.  This is a number that is usually either 0 or 1.  Unfortunately it's not always the same as the ``Output index'' shown in the transaction details window.  To get it, go back to the debug console and type
+\begin{verbatim}
+   masternode outputs
+\end{verbatim}
+
+This will give you a list of ``txhash'' and ``outputidx'' pairs.  Find your transaction ID in this list (transaction ID = txhash), along with the matching outputidx.  
+\begin{center}
+   \includegraphics[width=0.8\textwidth]{outputs}
+\end{center}
+Most of the time this outputidx will be the same as the one from the transaction details window, but sometimes it's not!  Record the outputidx.  Now you are ready to put all these things into the masternode configuration file.  
+
+\subsection{Edit the Masternode Configuration File and Restart the ODIN Core Wallet}
+Now you have all the information you need to link the VPS masternode hot wallet that you set up in section 1 to the transaction you just did above. Open the masternode.conf file from the ODIN Core Wallet menu (``Tools'' $\rightarrow$ ``Open Masternode Configuration File'') and add a new line for your new masternode with all the info you have collected, using this format:
+\begin{verbatim}
+   <mn01> <masternode ip>:22100 <masternode private key> <txhash> <outputidx>
+\end{verbatim}
+where,
+
+\verb|<mn01>| is the label you gave the ODIN address you created,  \\
+\verb|<masternode ip>| is your VPS IP address from section 1. The port :22100 has to always be there, \\
+\verb|<masternode private key>| from section 1, starts with a ``5'' always,\\
+\verb|<txhash>| and \verb|<outputidx>| are the transaction details from sending \num{25000} ODIN.
+
+If you have set up three masternodes (by going through these steps three times), your masternode configuration file will look something like this:
+\begin{center}
+   \includegraphics[width=0.9\textwidth]{mnconf}
+\end{center}
+Once you are done, save your changes, and \textbf{restart the ODIN Core wallet}. Just close the wallet and open it again.
+
+\subsection{Starting Your Masternode}
+Once you have re-launched the ODIN Core wallet, click on the battle axe icon circle on the bottom left.  This will open up the MN section of the wallet (if for some reason it is missing, go to ``Settings'' $\rightarrow$ ``Options'' $\rightarrow$ ``Wallet Tab'' $\rightarrow$ and check the ``Show Masternodes Tab'' option.  
+
+In the MN tab, you should now see your newly added MN.  It's status will be ``Missing''.  Click the ``Start Missing'' button to start it.  Alternatively, you can select it and press ``Start Alias''.  You should then get a message ``successfully started masternode''.  \textbf{Congratulations, you are done!}  
+
+Almost...
+You'll notice that the ``Active'' time stays at 00:00:00:00 for a very long time.  It will take about 6 hours for the coins to ``mature'' and for your MN to start staking.  When the coins in the node have matured long enough (the 6 hours), the status will change from ``Active'' to ``Enabled''.
+
+\subsection{Checking to see if your masternode has actually started}
+Follow step 1.1 to log back into your VPS.  Then check on your MN status with the command
+\begin{verbatim}
+   odin-cli masternode status
+\end{verbatim}
+if all went well, you should see a message like
+\begin{verbatim}
+   {
+  "txhash": "cbc4sd8f78s9duifhw8erwe87yfhsdoufs6d7f79sd7fed",
+  "outputidx": 0,
+  "netaddr": "199.99.123.210:22100",
+  "addr": "oZuSdfjhsdf87sd879709874kx",
+  "status": 4,
+  "message": "Masternode successfully started"
+}
+\end{verbatim}
+If you still get a message saying it is a hot node waiting for activation, then wait 10 minutes and try starting the masternode again from the ODIN Core wallet (even if the activation seemed to have been succesful in the previous step).  Try checking the masternode status in the VPS again.  Repeat these steps until it works.  It seems like it can sometimes take a long time for the hot and cold wallets to find each other.  
+
+\subsection{Notes}
+\begin{itemize}[noitemsep]
+   \item The number of masternodes is shown in the information tab (tools $\rightarrow$ information) of the ODIN Core wallet.  
+   \item If there are $N$ total masternodes, a single masternode should get a stake every $N$ minutes, on average.
+   \item Remember, all you coins are ``stored'' in the cold wallet (the coins are actually on the blockchain).  You never send any coins to the hot wallet on the VPS.
+   \item Once you have set up your masternodes, you can close your cold wallet and even shut off your home computer.  The masternodes living on your VPS will keep on staking away.  Whenever your cold wallet goes back online, it will receive all the stakes it missing from your masternodes and update your ODIN total.  
+   \item To unlock the coins staked by your masternode, remove that masternode from the masternode configuration file.  You can simply ``comment out'' that masternode line by adding a \verb|#| in front and saving the file.  When you restart your ODIN Core wallet, the masternode will be gone from your list and you can then spend the coins.  You should also stop the associated masternode on the VPS from staking by logging in to its VPS and executing \verb|odin-cli stop|.
+\end{itemize}
+\end{document}
