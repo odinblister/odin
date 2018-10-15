@@ -20,7 +20,7 @@ mkdir Downloads
 wget https://github.com/odinblockchain/Odin/releases/download/v1.4.2/odin-1.4.2-x86_64-linux-gnu.tar.gz -P ~/Downloads/
 cd Downloads
 tar xvzf ~/Downloads/odin-1.4.2-x86_64-linux-gnu.tar.gz 
-cp odin-1.4.2/bin/odin* /usr/bin/. && cd
+sudo cp odin-1.4.2/bin/odin* /usr/bin/. && cd
 
 #Set up initial odin.conf file.  The auto ipaddress might not work if multiple adapters, so I prompt for IP instead.
 #present (like for ipv6 and ipv4).
