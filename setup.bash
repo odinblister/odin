@@ -3,7 +3,6 @@
 #Welcome message
 echo "Welcome to mrblister's VPS masternode setup"  
 echo "This script will now install your masternode."
-sleep 3
 
 #Update the VPS server.  Uncomment if you want to update the server.
 #sudo apt update
