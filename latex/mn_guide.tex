@@ -117,14 +117,16 @@ If you have set up three masternodes (by going through these steps three times),
 Once you are done, save your changes, and \textbf{restart the ODIN Core wallet}. Just close the wallet and open it again.
 
 \subsection{Starting Your Masternode}
-Once you have re-launched the ODIN Core wallet, click on the battle axe icon circle on the bottom left.  This will open up the MN section of the wallet (if for some reason it is missing, go to ``Settings'' $\rightarrow$ ``Options'' $\rightarrow$ ``Wallet Tab'' $\rightarrow$ and check the ``Show Masternodes Tab'' option.  
+In order to start your masternode, \textbf{you need to wait until the \num{25000} ODIN payment to yourself has a minimum of 15 confirmations}.  You can check this by double clicking the transaction in the ODIN Core wallet.  When you see that you have 15 or more confirmations, then you can start your masternode.
+
+First, click on the battle axe icon circle on the bottom left of the ODIN Core wallet.  This will open up the MN section of the wallet (if for some reason it is missing, go to ``Settings'' $\rightarrow$ ``Options'' $\rightarrow$ ``Wallet Tab'' $\rightarrow$ and check the ``Show Masternodes Tab'' option.  
 
 In the MN tab, you should now see your newly added MN.  It's status will be ``Missing''.  Click the ``Start Missing'' button to start it.  Alternatively, you can select it and press ``Start Alias''.  You should then get a message ``successfully started masternode''.  \textbf{Congratulations, you are done!}  
 
 Almost...
 You'll notice that the ``Active'' time stays at 00:00:00:00 for a very long time.  It will take about 6 hours for the coins to ``mature'' and for your MN to start staking.  When the coins in the node have matured long enough (the 6 hours), the status will change from ``Active'' to ``Enabled''.
 
-\textbf{Oct 15 Update:} It seems that with more total masternodes in the chain, it takes a lot longer for the coins to mature.  Users are reporting that they are seeing their first rewards 20 hours after starting a new masternode.
+\textbf{Oct 15 Update:} It seems that with more total masternodes in the chain, it takes a lot longer for the coins to mature.  Users are reporting that they are seeing their first rewards 24 hours or more after starting a new masternode.
 
 \subsection{Checking to see if your masternode has actually started}
 Follow step 1.1 to log back into your VPS.  Then check on your MN status with the command
@@ -142,7 +144,7 @@ if all went well, you should see a message like
   "message": "Masternode successfully started"
 }
 \end{verbatim}
-If you still get a message saying it is a hot node waiting for activation, then wait 10 minutes and try starting the masternode again from the ODIN Core wallet (even if the activation seemed to have been succesful in the previous step).  Try checking the masternode status in the VPS again.  Repeat these steps until it works.  It seems like it can sometimes take a long time for the hot and cold wallets to find each other.  
+If you still get a message saying it is a hot node waiting for activation, then you didn't wait until the \SI{25000} ODIN transaction had more than 15 confirmations.  You probably need to wait 20 minutes or so.  When you can confirm that you have more than 15 confirmations, try checking the masternode status in the VPS again.   
 
 \subsection{Notes}
 \begin{itemize}[noitemsep]
