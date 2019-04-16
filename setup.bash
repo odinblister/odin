@@ -8,11 +8,26 @@ echo "This script will now install your masternode."
 #sudo apt update
 #sudo apt dist-upgrade -y
 
-#Turn swap on, not needed but maybe will be useful in future.
-sudo dd if=/dev/zero of=/var/swap.img bs=1024k count=1000
-sudo mkswap /var/swap.img
-sudo chmod 600 /var/swap.img
-sudo swapon /var/swap.img
+# Set up 1GB of swap for low memory vps.  
+swapoff -a -v
+fallocate -l 1G /swapfile
+chmod 600 /swapfile
+mkswap /swapfile
+
+# Create systemd swap configuration file so the swap remains after reboots. 
+swapsys=/etc/systemd/system/swapfile.swap
+echo "[Unit]" >> $swapsys
+echo "Description=Turn on swap" >> $swapsys
+echo " " >> $swapsys
+echo "[Swap]" >> $swapsys
+echo "What=/swapfile" >> $swapsys
+echo " " >> $swapsys
+echo "[Install]" >> $swapsys
+echo "WantedBy=multi-user.target" >> $swapsys
+systemctl enable swapfile.swap
+systemctl start swapfile.swap
+free
+echo " "
 
 #Get odin binaries
 mkdir Downloads
