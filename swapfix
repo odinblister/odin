@@ -1,0 +1,25 @@
+#!/bin/bash
+
+#Welcome message
+echo "This script will enable a persistent swap file for your VPS."  
+
+# Set up 1GB of swap for low memory vps.
+swapoff -a -v
+fallocate -l 1G /swapfile
+chmod 600 /swapfile
+mkswap /swapfile
+
+# Create systemd swap configuration file so the swap remains after reboots. 
+swapsys=/etc/systemd/system/swapfile.swap
+echo "[Unit]" >> $swapsys
+echo "Description=Turn on swap" >> $swapsys
+echo " " >> $swapsys
+echo "[Swap]" >> $swapsys
+echo "What=/swapfile" >> $swapsys
+echo " " >> $swapsys
+echo "[Install]" >> $swapsys
+echo "WantedBy=multi-user.target" >> $swapsys
+systemctl enable swapfile.swap
+systemctl start swapfile.swap
+free
+echo " "
