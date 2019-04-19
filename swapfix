@@ -24,6 +24,6 @@ then
   echo "WantedBy=multi-user.target" >> $swapsys
   systemctl enable swapfile.swap
   systemctl start swapfile.swap
-  free
 fi
+free
 echo " "
