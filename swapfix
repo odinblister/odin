@@ -12,18 +12,19 @@ mkswap /swapfile
 
 # Create systemd swap configuration file so the swap remains after reboots. 
 swapsys=/etc/systemd/system/swapfile.swap
-if [ ! -f $swapsys ];
+if [ -f $swapsys ];
 then
-  echo "[Unit]" >> $swapsys
-  echo "Description=Turn on swap" >> $swapsys
-  echo " " >> $swapsys
-  echo "[Swap]" >> $swapsys
-  echo "What=/swapfile" >> $swapsys
-  echo " " >> $swapsys
-  echo "[Install]" >> $swapsys
-  echo "WantedBy=multi-user.target" >> $swapsys
-  systemctl enable swapfile.swap
-  systemctl start swapfile.swap
+  rm $swapsys
 fi
+echo "[Unit]" >> $swapsys
+echo "Description=Turn on swap" >> $swapsys
+echo " " >> $swapsys
+echo "[Swap]" >> $swapsys
+echo "What=/swapfile" >> $swapsys
+echo " " >> $swapsys
+echo "[Install]" >> $swapsys
+echo "WantedBy=multi-user.target" >> $swapsys
+systemctl enable swapfile.swap
+systemctl start swapfile.swap
 free
 echo " "
