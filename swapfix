@@ -1,7 +1,8 @@
 #!/bin/bash
 
 #Welcome message
-echo "This script will enable a persistent swap file for your VPS."  
+echo "This script will enable a persistent swap file for your VPS." 
+echo "It's to be used on older versions of my script (prior to 1.1)."
 
 # Set up 1GB of swap for low memory vps.
 swapoff -a -v
