@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #Welcome message
-echo "Welcome to mrblister's VPS masternode setup"  
+echo "Welcome to mrblister's VPS masternode setup, version 1.1."  
 echo "This script will now install your masternode."
 
 #Update the VPS server.  Uncomment if you want to update the server.
