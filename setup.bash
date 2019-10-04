@@ -1,20 +1,21 @@
 #!/bin/bash
 
 #Welcome message
-echo "Welcome to mrblister's VPS masternode setup, version 1.1."  
+echo "Welcome to mrblister's VPS masternode setup"  
 echo "This script will now install your masternode."
 
 #Update the VPS server.  Uncomment if you want to update the server.
 #sudo apt update
 #sudo apt dist-upgrade -y
 
-# Set up 1GB of swap for low memory vps.  
+# Set up swap for low memory vps.  It's easier to do so via a swapfile managed by 
+# systemd vs creating an entry in fstab.  That way I don't have to worry about this script appending 
+# multiple lines in fstab each time it is run.  
+echo "Configuring swapfile..."
 swapoff -a -v
-fallocate -l 1G /swapfile
+fallocate -l $swap /swapfile
 chmod 600 /swapfile
 mkswap /swapfile
-
-# Create systemd swap configuration file so the swap remains after reboots. 
 swapsys=/etc/systemd/system/swapfile.swap
 echo "[Unit]" >> $swapsys
 echo "Description=Turn on swap" >> $swapsys
@@ -27,7 +28,7 @@ echo "WantedBy=multi-user.target" >> $swapsys
 systemctl enable swapfile.swap
 systemctl start swapfile.swap
 free
-echo " "
+echo " " 
 
 #Get odin binaries
 mkdir Downloads
@@ -50,7 +51,6 @@ echo "logtimestamps=1" >> $config
 echo "maxconnections=256" >> $config
 echo "externalip=$ipaddress" >> $config
 echo "masternodeaddr=$ipaddress" >> $config
-
 
 #start odind to get mn private key and append to odin.conf, restart odind. 
 odind
@@ -91,13 +91,10 @@ echo "WantedBy=multi-user.target" >> $servicefile
 
 # Enable masternode service so it starts at boot, and start masternode
 odin_enable="systemctl enable odin"
-odin_start="systemctl start odin"
 echo "Enabling odin masternode systemd service..."
-eval $odin_enable
-echo "Starting odin masternode..."
-eval $odin_start
+systemctl enable odin
+systemctl start odin
 
-#finishing up 
 echo " "
 echo "Masternode VPS setup complete."
 echo "(it will now take a few minutes for the mn to get ready)"
@@ -109,4 +106,3 @@ echo "$ipaddress"
 echo "Your masternode private key is:"
 echo "$mnkey"
 echo " "
- 
