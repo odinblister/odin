@@ -13,7 +13,7 @@ echo "This script will now install your masternode."
 # multiple lines in fstab each time it is run.  
 echo "Configuring swapfile..."
 swapoff -a -v
-fallocate -l $swap /swapfile
+fallocate -l 1G /swapfile
 chmod 600 /swapfile
 mkswap /swapfile
 swapsys=/etc/systemd/system/swapfile.swap
