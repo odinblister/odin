@@ -32,7 +32,7 @@ echo " "
 
 #Get odin binaries
 mkdir Downloads
-wget https://github.com/odinblockchain/Odin/releases/download/v1.4.2/odin-1.4.2-x86_64-linux-gnu.tar.gz -P ~/Downloads/
+#wget https://github.com/odinblockchain/Odin/releases/download/v1.4.2/odin-1.4.2-x86_64-linux-gnu.tar.gz -P ~/Downloads/
 wget https://github.com/odinblockchain/Odin/releases/download/v1.6.6/odin-1.6.6-x86_64-linux-gnu.tar.gz -P ~/Downloads/
 cd Downloads
 tar xvzf ~/Downloads/odin-1.4.2-x86_64-linux-gnu.tar.gz 
